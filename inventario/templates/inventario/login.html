@@ -1,0 +1,69 @@
+<!doctype html>
+<html class="no-js" lang="en">
+{% include "inventario/comun/estilos.html" %}
+    <body>
+    
+        <div class="auth">
+            <div class="auth-container">
+                <div class="card">
+                    <header class="auth-header">
+                        <h1 class="auth-title">
+                        {% load static %} 
+                        <div class="logo-nuevo">
+                        <img id="logo-endogeno2" src="{% static 'inventario/assets/logo/logo2.png' %}">
+                        </div>
+                        Administrador</h1>
+                    </header>
+                    <div class="auth-content">
+                        <p class="text-center"></p>
+                        <form id="login-form" method="POST" novalidate="">
+                            <div class="form-group">
+                                {% csrf_token %}
+                                <label for="{{ form.username.id_for_label }}">Nombre de usuario:</label>
+                                {{ form.username }}
+                            </div>
+                            <div class="form-group">
+                                <label for="{{ form.password.id_for_label }}">Contraseña:</label>
+                                {{ form.password }}
+                            </div>
+                        
+
+
+
+                            <div class="form-group">
+                                <label for="remember">
+                                    <input class="checkbox" id="remember" type="checkbox">
+                                    <span>Recordarme</span>
+                                </label>
+                              
+                            </div>
+                        
+
+
+
+
+
+
+
+                            <div class="form-group">
+                                <button type="submit" class="btn btn-block btn-primary">Iniciar sesion</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Reference block for JS -->
+        <div class="ref" id="ref">
+            <div class="color-primary"></div>
+            <div class="chart">
+                <div class="color-primary"></div>
+                <div class="color-secondary"></div>
+            </div>
+        </div>
+        <iframe width="560" height="315" src="https://www.youtube.com/embed/pIgib0WPRjM?si=p1EPC41m0bW3vU3d" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+{% include "inventario/comun/scripts.html" %}
+
+
+    </body>
+</html>
