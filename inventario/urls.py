@@ -1,5 +1,6 @@
 from django.urls import path
 from . import views
+from .views import generar_reporte_pdf
 
 app_name = "inventario"
 
@@ -50,6 +51,7 @@ path('importarBDD',views.ImportarBDD.as_view(), name='importarBDD'),
 path('descargarBDD', views.DescargarBDD.as_view(), name='descargarBDD'),
 path('configuracionGeneral', views.ConfiguracionGeneral.as_view(), name='configuracionGeneral'),
 
-path('verManualDeUsuario/<str:pagina>/',views.VerManualDeUsuario.as_view(), name='verManualDeUsuario')
+path('verManualDeUsuario/<str:pagina>/',views.VerManualDeUsuario.as_view(), name='verManualDeUsuario'),
+path('generar_reporte/', views.generar_reporte_pdf, name='generar_reporte_pdf'),
 ]
 

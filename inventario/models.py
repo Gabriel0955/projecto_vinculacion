@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser
+from django.core.validators import RegexValidator
 
 
 
@@ -38,12 +39,16 @@ class Opciones(models.Model):
 #-------------------------------PRODUCTO------------------------------------------------
 class Producto(models.Model):
     #id
-    decisiones =  [('1','Unidad'),('2','Kilo'),('3','Litro'),('4','Otros')]
+    decisiones =  [('1','Donaciones en Efectivo'),('2','Transferencias Bancarias'),('3','Vales de Comida'),('4','Otros')]
     descripcion = models.CharField(max_length=40)
     precio = models.DecimalField(max_digits=9,decimal_places=2)
     disponible = models.IntegerField(null=True)
     categoria = models.CharField(max_length=20,choices=decisiones)
     tiene_iva = models.BooleanField(null=True)
+    fecha = models.DateField(auto_now_add=True,null=True)
+
+    def __str__(self):
+        return self.descripcion
 
     @classmethod
     def numeroRegistrados(self):
@@ -112,6 +117,10 @@ class Cliente(models.Model):
     telefono2 = models.CharField(max_length=20,null=True)
     correo = models.CharField(max_length=100)
     correo2 = models.CharField(max_length=100,null=True)
+    donacion = models.CharField(max_length=100,null=True)
+    cantidad = models.CharField(max_length=100,validators=[RegexValidator(regex=r'^[a-zA-Z0-9\s]*$',  message='Este campo solo puede contener letras, números y espacios.',code='invalid_campo')],null=True)
+    productos = models.ForeignKey(Producto, on_delete=models.CASCADE, null=True)
+
 
     @classmethod
     def numeroRegistrados(self):
@@ -200,6 +209,11 @@ class Proveedor(models.Model):
     telefono2 = models.CharField(max_length=20,null=True)
     correo = models.CharField(max_length=100)
     correo2 = models.CharField(max_length=100,null=True)
+    donacion = models.CharField(max_length=100,null=True)
+    cantidad = models.CharField(max_length=100, validators=[
+        RegexValidator(regex=r'^[a-zA-Z0-9\s]*$', message='Este campo solo puede contener letras, números y espacios.',
+                       code='invalid_campo')],null=True)
+    productos = models.ForeignKey(Producto,on_delete=models.CASCADE,null=True)
 
     @classmethod
     def cedulasRegistradas(self):

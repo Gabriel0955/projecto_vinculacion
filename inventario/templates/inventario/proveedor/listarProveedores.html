@@ -44,6 +44,8 @@
                                                             <th>Nombre completo</th>
                                                             <th>Telefono</th>
                                                             <th>Correo</th>
+                                                            <th>Donacion</th>
+                                                            <th>Cantidad</th>
                                                             <th>Opciones</th>
                                                         </tr>
                                                     </thead>
@@ -51,10 +53,13 @@
                                                     	{% for fila in tabla %}
                                                         <tr>
                                                             <td>{{  fila.id }}</td>
-                                                            <td>{{ fila.cedula}}</td>
+                                                            <td>{{ fila.cedula }}</td>
                                                             <td>{{ fila.nombre }} {{ fila.apellido }}</td>
                                                             <td>{{ fila.telefono }}</td>
                                                             <td>{{ fila.correo }}</td>
+
+                                                            <td>{{ fila.productos.descripcion }}</td>
+                                                            <td>{{ fila.productos.disponible }}</td>
                                                             <td>
 
                                                 <div class="btn-group">

@@ -3,6 +3,8 @@ from django.shortcuts import render
 # para redirigir a otras paginas
 from django.http import HttpResponseRedirect, HttpResponse,FileResponse
 #el formulario de login
+from reportlab.pdfgen import canvas
+
 from .forms import *
 # clase para crear vistas basadas en sub-clases
 from django.views import View
@@ -559,9 +561,11 @@ class AgregarCliente(LoginRequiredMixin, View):
             telefono2 = form.cleaned_data['telefono2']
             correo2 = form.cleaned_data['correo2']
 
+            productos = form.cleaned_data['productos']
+
             cliente = Cliente(cedula=cedula,nombre=nombre,apellido=apellido,
                 direccion=direccion,nacimiento=nacimiento,telefono=telefono,
-                correo=correo,telefono2=telefono2,correo2=correo2)
+                correo=correo,telefono2=telefono2,correo2=correo2,productos=productos)
             cliente.save()
             form = ClienteFormulario()
 
@@ -676,6 +680,8 @@ class EditarCliente(LoginRequiredMixin, View):
             correo = form.cleaned_data['correo']
             telefono2 = form.cleaned_data['telefono2']
             correo2 = form.cleaned_data['correo2']
+            cantidad = form.cleaned_data['cantidad']
+            productos = form.cleaned_data['productos']
 
             cliente.cedula = cedula
             cliente.nombre = nombre
@@ -686,7 +692,10 @@ class EditarCliente(LoginRequiredMixin, View):
             cliente.correo = correo
             cliente.telefono2 = telefono2
             cliente.correo2 = correo2
+
+            cliente.productos = productos
             cliente.save()
+
             form = ClienteFormulario(instance=cliente)
 
             messages.success(request, 'Actualizado exitosamente el cliente de ID %s.' % p)
@@ -972,9 +981,12 @@ class AgregarProveedor(LoginRequiredMixin, View):
             telefono2 = form.cleaned_data['telefono2']
             correo2 = form.cleaned_data['correo2']
 
+            productos = form.cleaned_data['productos']
+
+
             proveedor = Proveedor(cedula=cedula,nombre=nombre,apellido=apellido,
                 direccion=direccion,nacimiento=nacimiento,telefono=telefono,
-                correo=correo,telefono2=telefono2,correo2=correo2)
+                correo=correo,telefono2=telefono2,correo2=correo2,productos=productos)
             proveedor.save()
             form = ProveedorFormulario()
 
@@ -1088,6 +1100,8 @@ class EditarProveedor(LoginRequiredMixin, View):
             telefono2 = form.cleaned_data['telefono2']
             correo2 = form.cleaned_data['correo2']
 
+            productos = form.cleaned_data['productos']
+
             proveedor.cedula = cedula
             proveedor.nombre = nombre
             proveedor.apellido = apellido
@@ -1097,6 +1111,8 @@ class EditarProveedor(LoginRequiredMixin, View):
             proveedor.correo = correo
             proveedor.telefono2 = telefono2
             proveedor.correo2 = correo2
+
+            proveedor.productos = productos
             proveedor.save()
             form = ProveedorFormulario(instance=proveedor)
 
@@ -1617,3 +1633,26 @@ class VerManualDeUsuario(LoginRequiredMixin, View):
 
 
 #Fin de vista--------------------------------------------------------------------------------
+
+def generar_reporte_pdf(request):
+    response = HttpResponse(content_type='application/pdf')
+    mes = request.GET.get('mes')
+    anio = request.GET.get('anio')
+    response['Content-Disposition'] = f'attachment; filename="reporte_{mes}_{anio}.pdf"'
+
+    # Crear el objeto PDF
+    pdf = canvas.Canvas(response)
+
+    # Obtener los productos del mes y año seleccionados
+    productos_mes = Producto.objects.filter(mes=mes, anio=anio)
+
+    # Escribir el contenido del PDF
+    for producto in productos_mes:
+        pdf.drawString(100, 100, producto.descripcion)
+        # Añadir más detalles según sea necesario
+
+    # Guardar el PDF
+    pdf.showPage()
+    pdf.save()
+
+    return response
